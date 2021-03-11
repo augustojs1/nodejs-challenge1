@@ -52,7 +52,7 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
 
   const todos = user.todos;
 
-  return response.status(200).json({ todos });
+  return response.status(200).json(todos);
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
@@ -69,7 +69,7 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
   user.todos.push(todo);
 
-  return response.status(201).json({ todo });
+  return response.status(201).json(todo);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
@@ -89,7 +89,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   todo.title = title;
   todo.deadline = deadlineFormat;
 
-  response.status(200).json({ todo });
+  response.status(200).json(todo);
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
