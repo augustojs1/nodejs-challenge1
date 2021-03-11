@@ -49,6 +49,7 @@ app.post('/users', (request, response) => {
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
   const user = request.user;
+
   const todos = user.todos;
 
   return response.status(200).json({ todos });
@@ -58,20 +59,24 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
   const { title, deadline } = request.body;
   const user = request.user;
 
-  user.todos.push({
+  const todo = {
     id: uuidv4(),
     title,
     done: false,
     deadline: new Date(deadline),
     created_at: new Date()
-  });
+  };
 
-  return response.status(200).json({ success: true, data: user.todos });
+  user.todos.push(todo);
+
+  return response.status(201).json({ todo });
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   const { id } = request.params;
   const { title, deadline } = request.body;
+
+  const deadlineFormat = new Date(deadline).toISOString();
 
   const user = request.user;
 
@@ -82,9 +87,9 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
   }
 
   todo.title = title;
-  todo.deadline = deadline;
+  todo.deadline = deadlineFormat;
 
-  response.status(200).json({ success: true, data: todo });
+  response.status(200).json({ todo });
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
@@ -99,7 +104,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
 
   todo.done = true;
 
-  response.status(200).json({ success: true, data: todo });
+  response.status(200).json(todo);
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
